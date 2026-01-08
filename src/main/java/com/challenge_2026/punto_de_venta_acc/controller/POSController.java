@@ -50,7 +50,7 @@ public class POSController {
             @PathVariable Long id,
             @RequestBody UpdatePOSRequest body) {
         try {
-            PointOfSale updated = posService.updateFull(String.valueOf(id), body.name());
+            PointOfSale updated = posService.updateNamePointOfSale(String.valueOf(id), body.name());
             return ResponseEntity.ok(body);
         } catch (NoSuchElementException e) {
             return ResponseEntity.notFound().build();
