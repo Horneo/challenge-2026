@@ -1,5 +1,8 @@
 package com.challenge_2026.punto_de_venta_acc.service;
 
+import com.challenge_2026.punto_de_venta_acc.dto.POSDto;
+import com.challenge_2026.punto_de_venta_acc.dto.POSResponse;
+import com.challenge_2026.punto_de_venta_acc.mapper.ResponsePOSMapper;
 import com.challenge_2026.punto_de_venta_acc.model.PointOfSale;
 import com.challenge_2026.punto_de_venta_acc.repository.POSRepository;
 import org.springframework.cache.annotation.CacheEvict;
@@ -16,9 +19,9 @@ public class POSService {
         this.repo = repo;
     }
 
-    @Cacheable(value = "pointOfSale")
-    public List<PointOfSale> findAll() {
-        return repo.findAll();
+    @Cacheable(value = "pointOfSale", key = "'all'")
+    public List<POSDto> findAll() {
+        return repo.findAll().stream().map(ResponsePOSMapper::toEntity).toList();
     }
 
     @CacheEvict( value = "pointOfSale", key = "#result.id")

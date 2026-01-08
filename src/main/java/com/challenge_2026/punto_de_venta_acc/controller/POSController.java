@@ -1,6 +1,7 @@
 package com.challenge_2026.punto_de_venta_acc.controller;
 
 import com.challenge_2026.punto_de_venta_acc.dto.CreatePOSRequest;
+import com.challenge_2026.punto_de_venta_acc.dto.POSDto;
 import com.challenge_2026.punto_de_venta_acc.dto.POSResponse;
 import com.challenge_2026.punto_de_venta_acc.dto.UpdatePOSRequest;
 import com.challenge_2026.punto_de_venta_acc.model.PointOfSale;
@@ -26,7 +27,7 @@ public class POSController {
 
 
     @GetMapping("/findAll")
-    public List<PointOfSale> findAllPOS() {
+    public List<POSDto> findAllPOS() {
         return posService.findAll();
     }
 
