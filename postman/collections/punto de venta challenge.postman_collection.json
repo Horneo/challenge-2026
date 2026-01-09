@@ -1,0 +1,147 @@
+{
+  "info": {
+    "_postman_id": "54d82dfe-a1dc-4537-b100-b1e2a54a2af2",
+    "name": "punto de venta challenge",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "endpoint create point of sale",
+      "id": "163ae67d-0f49-4976-be23-92201f27b5d0",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"id\": \"1\",\r\n    \"name\": \"Punto de venta Mar del Plata\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "localhost:8080/v1/point-of-sale/create",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "point-of-sale",
+            "create"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "endpoint getAll point of sale",
+      "id": "661bd2e0-4856-453d-b1d1-fb4312c49dcf",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "endpoint update point of sale",
+      "id": "64591d7e-1024-47b9-bc54-d64c4de10287",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"name\": \"PDV - Mar del Plata\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "localhost:8080/v1/point-of-sale/1",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "point-of-sale",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "endpoint delete point of sale",
+      "id": "2806fe69-2829-4024-a0f2-f33c99a9b632",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "localhost:8080/v1/point-of-sale/1",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "point-of-sale",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "crear camino o grafo entre puntos de venta",
+      "id": "3a940e02-ecfb-4798-8f3f-febb400e4074",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"pointA\": \"1\",\r\n  \"pointB\": \"2\",\r\n  \"cost\": 2 \r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "localhost:8080/v1/point-of-sale-cost/create",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "point-of-sale-cost",
+            "create"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
