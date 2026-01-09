@@ -15,7 +15,7 @@ public interface ResponseGraphPOSMapper {
     }
 
     static GraphPointOfSale toEntity(CreateGraphPOSRequest dto) {
-        return new GraphPointOfSale(dto.pointA(), dto.pointB(), dto.cost());
+        return new GraphPointOfSale(null,dto.pointA(), dto.pointB(), dto.cost());
     }
 }
 
