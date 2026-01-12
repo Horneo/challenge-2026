@@ -42,8 +42,8 @@ public class GraphPOSService {
         //return updated;
     //}
 
-    //@CacheEvict( value = "pointOfSale", key = "#id")
-    //public void delete(String id) { repo.deleteById(id);}
+    @CacheEvict( value = "pointOfSale", key = "#pointA + '-' + #pointB")
+    public void delete(String pointA, String pointB) { repo.deleteByOriginPointOfSaleAndDestinationPointOfSale(pointA, pointB);}
 
 }
 

@@ -6,7 +6,7 @@
   },
   "item": [
     {
-      "name": "endpoint create point of sale",
+      "name": "enunciado 1 - endpoint create point of sale",
       "id": "163ae67d-0f49-4976-be23-92201f27b5d0",
       "request": {
         "method": "POST",
@@ -42,16 +42,19 @@
       "response": []
     },
     {
-      "name": "endpoint getAll point of sale",
+      "name": "enunciado 1 - endpoint getAll point of sale",
       "id": "661bd2e0-4856-453d-b1d1-fb4312c49dcf",
       "request": {
         "method": "GET",
-        "header": []
+        "header": [],
+        "url": {
+          "raw": ""
+        }
       },
       "response": []
     },
     {
-      "name": "endpoint update point of sale",
+      "name": "enunciado 1 - endpoint update point of sale",
       "id": "64591d7e-1024-47b9-bc54-d64c4de10287",
       "request": {
         "method": "PUT",
@@ -87,7 +90,7 @@
       "response": []
     },
     {
-      "name": "endpoint delete point of sale",
+      "name": "enunciado 1 - endpoint delete point of sale",
       "id": "2806fe69-2829-4024-a0f2-f33c99a9b632",
       "request": {
         "method": "DELETE",
@@ -108,7 +111,7 @@
       "response": []
     },
     {
-      "name": "crear camino o grafo entre puntos de venta",
+      "name": "enunciado 2 - crear camino o grafo entre puntos de venta",
       "id": "3a940e02-ecfb-4798-8f3f-febb400e4074",
       "request": {
         "method": "POST",
@@ -138,6 +141,71 @@
             "v1",
             "point-of-sale-cost",
             "create"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "enunciado 2 - endpoint borra camino/ruta entre dos puntos",
+      "id": "37d044d3-d9e4-4470-9540-20bfa548e19a",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text",
+            "uuid": "3a43ba4d-da0f-4993-b790-ad382202cefd"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"pointA\": \"\",\r\n    \"pointB\": \"\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "localhost:8080/v1/point-of-sale-cost/remove",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "point-of-sale-cost",
+            "remove"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "enunciado 2 - endpoint muestra todos los caminos de los puntos de venta",
+      "id": "05ac5ada-b4c7-4f71-a70f-d45b86dfae0a",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text",
+            "uuid": "580bed9b-0591-4504-8f78-59afce5c2659"
+          }
+        ],
+        "url": {
+          "raw": "localhost:8080/v1/point-of-sale-cost/findAll",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "point-of-sale-cost",
+            "findAll"
           ]
         }
       },
