@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 
 import java.math.BigDecimal;
 
-public record FundAccreditation(
+public record FundAccreditationDTO(
         @NotBlank(message = "Debe ingresar un monto obligatoriamente y no puede estar vacío.")
         BigDecimal amount,
         @NotBlank(message = "Debe ingresar un id obligatoriamente y no puede estar vacío.")
