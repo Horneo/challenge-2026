@@ -19,7 +19,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"id\": \"1\",\r\n    \"name\": \"Punto de venta Mar del Plata\"\r\n}",
+          "raw": "{\r\n    \"id\": \"4\",\r\n    \"name\": \"PDV - Capital Federal\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -46,9 +46,25 @@
       "id": "661bd2e0-4856-453d-b1d1-fb4312c49dcf",
       "request": {
         "method": "GET",
-        "header": [],
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text",
+            "uuid": "aeb48ec2-567a-4b67-b966-e580ba54f1aa"
+          }
+        ],
         "url": {
-          "raw": ""
+          "raw": "localhost:8080/v1/point-of-sale/findAll",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "point-of-sale",
+            "findAll"
+          ]
         }
       },
       "response": []
@@ -206,6 +222,34 @@
             "v1",
             "point-of-sale-cost",
             "findAll"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "enunciado 2 - mostrar el camino mas corto entre 2 puntos(por ahora entre todos los puntos)",
+      "id": "60b2da97-71c5-4d88-b55e-338945a944aa",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text",
+            "uuid": "4785a882-8d5a-408e-902e-0d74b2fba0a8"
+          }
+        ],
+        "url": {
+          "raw": "localhost:8080/v1/point-of-sale-cost/showMinimumRoutes",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "point-of-sale-cost",
+            "showMinimumRoutes"
           ]
         }
       },

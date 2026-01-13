@@ -61,6 +61,11 @@ public class PointOfSaleRouteCostController {
         return graphPosService.findAll();
     }
 
+    @GetMapping("/showMinimumRoutes")
+    public List<MinimumGraphPOSDto> showMinimumRoutes() {
+        return graphPosService.showMinimumRoutes();
+    }
+
     private static @NonNull StringBuilder buildMessageResponse(CreateGraphPOSRequest body) {
         StringBuilder sb = new StringBuilder();
         sb.append("Se creo el camino entre");
