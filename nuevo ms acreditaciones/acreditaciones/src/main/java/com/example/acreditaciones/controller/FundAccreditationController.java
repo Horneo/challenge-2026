@@ -24,7 +24,7 @@ public class FundAccreditationController {
 
 
         fundAccreditationService.create(body);
-        
+
         URI location = uriBuilder
                 .path("/v1/accreditation/add")
                 .build("");

@@ -254,6 +254,43 @@
         }
       },
       "response": []
+    },
+    {
+      "name": "enunciado 3- agregar acreditacion a un punto de venta",
+      "id": "14f70907-b566-4414-a095-90ab99e7fea3",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text",
+            "uuid": "9d9e8553-0bed-43fb-b61d-d3f83bf1f710"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"amount\": 20.50,\r\n    \"idPointOfSale\": \"1\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "localhost:8081/v1/accreditation/add",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "v1",
+            "accreditation",
+            "add"
+          ]
+        }
+      },
+      "response": []
     }
   ]
 }
