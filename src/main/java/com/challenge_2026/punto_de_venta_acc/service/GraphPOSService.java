@@ -12,6 +12,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -58,22 +59,24 @@ public class GraphPOSService {
         Map<String, String> posNameById = allPos.stream()
                 .collect(Collectors.toMap(POSDto::getId, POSDto::getName, (a, b) -> a)); // merge function defensiva
 
-        // 3) Construyo nuevos DTOs con nombres (si existen en el mapa)
-        return routes.stream()
-                .map(r -> {
-                    String originId = r.getOriginPOS();
-                    String destId   = r.getDestionationPOS(); // <-- corregir a getDestinationPOS cuando arregles el DTO
+        // 3) Recorro todos los caminos mas cortos y le cargo el nombre del punto de venta
 
-                    String originName = posNameById.get(originId);
-                    String destName   = posNameById.get(destId);
+        List<MinimumGraphPOSDto> out = new ArrayList<>(routes.size());
+        for (MinimumGraphPOSDto r : routes) {
+            String originId = r.getOriginPOS();
+            String destId   = r.getDestionationPOS(); // corregido
 
-                    MinimumGraphPOSDto out = new MinimumGraphPOSDto();
-                    out.setOriginPOS(originName != null ? originName : originId);
-                    out.setDestionationPOS(destName != null ? destName : destId);
-                    out.setMinimumCost(r.getMinimumCost());
-                    return out;
-                })
-                .toList();
+            String originName = posNameById.getOrDefault(originId, originId);
+            String destName   = posNameById.getOrDefault(destId, destId);
+
+            MinimumGraphPOSDto dto = new MinimumGraphPOSDto();
+            dto.setOriginPOS(originName);
+            dto.setDestionationPOS(destName);
+            dto.setMinimumCost(r.getMinimumCost());
+            out.add(dto);
+        }
+        return out;
+
     }
 
     @CacheEvict( value = "pointOfSale", key = "#pointA + '-' + #pointB")
