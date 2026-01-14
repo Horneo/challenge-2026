@@ -5,12 +5,9 @@ import com.challenge_2026.punto_de_venta_acc.dto.MinimumGraphPOSDto;
 import com.challenge_2026.punto_de_venta_acc.dto.POSDto;
 import com.challenge_2026.punto_de_venta_acc.mapper.ResponseGraphPOSMapper;
 import com.challenge_2026.punto_de_venta_acc.mapper.ResponseMinimumGraphPOSMapper;
-import com.challenge_2026.punto_de_venta_acc.mapper.ResponsePOSMapper;
 import com.challenge_2026.punto_de_venta_acc.model.GraphPointOfSale;
-import com.challenge_2026.punto_de_venta_acc.model.PointOfSale;
 import com.challenge_2026.punto_de_venta_acc.repository.GraphPOSRepository;
 import com.challenge_2026.punto_de_venta_acc.repository.GraphPointOfSaleAggRepository;
-import com.challenge_2026.punto_de_venta_acc.repository.POSRepository;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -18,8 +15,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.toList;
 
 @Service
 public class GraphPOSService {
@@ -80,32 +75,6 @@ public class GraphPOSService {
                 })
                 .toList();
     }
-
-
-    //@Cacheable(value = "graphPointOfSaleMinimumRoutes", key = "'allMinimumRoutes'")
-    //public List<MinimumGraphPOSDto> showMinimumRoutes() {
-    //    List<MinimumGraphPOSDto> resultMinimumRoutesRaw = minimumRoutesRepo.findMinCostPerOriginAndDestination().stream().map(ResponseMinimumGraphPOSMapper::toDto).toList();
-
-    //    List<MinimumGraphPOSDto> resultMinimumRoutesWithNameOfPOS = resultMinimumRoutesRaw.stream().map( resultMinimumRoutes -> {
-    //        String originPOSName = posService.findAll().stream().filter(pdv -> pdv.getId().equals(resultMinimumRoutes.getOriginPOS())).map(pdv -> { return pdv.getName(); }).toString();
-    //        String destinationPOSName = posService.findAll().stream().filter(pdv -> pdv.getId().equals(resultMinimumRoutes.getDestionationPOS())).map(pdv -> { return pdv.getName(); }).toString();
-    //        resultMinimumRoutes.setOriginPOS(originPOSName != null ? originPOSName : resultMinimumRoutes.getOriginPOS());
-    //        resultMinimumRoutes.setDestionationPOS(destinationPOSName != null ? destinationPOSName : resultMinimumRoutes.getDestionationPOS());
-    //        return resultMinimumRoutes;
-    //    }).toList();
-
-    //    return resultMinimumRoutesWithNameOfPOS;
-    //}
-
-    //@CacheEvict( value = "pointOfSale", key = "#result.id")
-    //public PointOfSale updateNamePointOfSale(String id, String newName) {
-
-      //  PointOfSale pos = repo.findById(id)
-        //        .orElseThrow(() -> new RuntimeException("Punto de Venta No Encontrado"));
-        //PointOfSale updated = pos.withName(newName);
-        //repo.save(updated);
-        //return updated;
-    //}
 
     @CacheEvict( value = "pointOfSale", key = "#pointA + '-' + #pointB")
     public void delete(String pointA, String pointB) { repo.deleteByOriginPointOfSaleAndDestinationPointOfSale(pointA, pointB);}
