@@ -26,8 +26,11 @@ services:
     container_name: mongo
     ports:
       - "27017:27017"
+    environment:
+      - MONGO_INITDB_DATABASE=posdb
     volumes:
-      - mongo_data:/data/db
+      - mongo-data:/data/db
+      - ./db-init.js:/docker-entrypoint-initdb.d/db-init.js:ro
     networks:
       - my_custom_network
 
@@ -40,4 +43,4 @@ services:
       - my_custom_network
 
 volumes:
-  mongo_data:
+    mongo-data: { }
