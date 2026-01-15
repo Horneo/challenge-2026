@@ -64,14 +64,14 @@ public class GraphPOSService {
         List<MinimumGraphPOSDto> out = new ArrayList<>(routes.size());
         for (MinimumGraphPOSDto r : routes) {
             String originId = r.getOriginPOS();
-            String destId   = r.getDestionationPOS(); // corregido
+            String destId   = r.getDestinationPOS(); // corregido
 
             String originName = posNameById.getOrDefault(originId, originId);
             String destName   = posNameById.getOrDefault(destId, destId);
 
             MinimumGraphPOSDto dto = new MinimumGraphPOSDto();
             dto.setOriginPOS(originName);
-            dto.setDestionationPOS(destName);
+            dto.setDestinationPOS(destName);
             dto.setMinimumCost(r.getMinimumCost());
             out.add(dto);
         }

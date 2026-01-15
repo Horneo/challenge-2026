@@ -2,7 +2,7 @@ package com.challenge_2026.punto_de_venta_acc.dto;
 
 public class MinimumGraphPOSDto {
     private String originPOS;
-    private String destionationPOS;
+    private String destinationPOS;
 
     private Integer minimumCost;
 
@@ -10,7 +10,7 @@ public class MinimumGraphPOSDto {
 
     public MinimumGraphPOSDto(String originPOS, String destinationPOS, Integer minimumCost) {
         this.originPOS = originPOS;
-        this.destionationPOS = destinationPOS;
+        this.destinationPOS = destinationPOS;
         this.minimumCost = minimumCost;
     }
 
@@ -22,12 +22,12 @@ public class MinimumGraphPOSDto {
         this.originPOS = originPOS;
     }
 
-    public String getDestionationPOS() {
-        return destionationPOS;
+    public String getDestinationPOS() {
+        return destinationPOS;
     }
 
-    public void setDestionationPOS(String destionationPOS) {
-        this.destionationPOS = destionationPOS;
+    public void setDestinationPOS(String destinationPOS) {
+        this.destinationPOS = destinationPOS;
     }
 
     public Integer getMinimumCost() {

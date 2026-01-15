@@ -12,6 +12,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
+import static com.challenge_2026.punto_de_venta_acc.dto.GraphPOSResponse.createMessage;
+import static com.challenge_2026.punto_de_venta_acc.dto.GraphPOSResponse.removeMessage;
+
 @RestController
 @RequestMapping("/v1/point-of-sale-cost") // Prefijo para todos los endpoints de este controlle
 public class PointOfSaleRouteCostController {
@@ -31,9 +34,7 @@ public class PointOfSaleRouteCostController {
                     .path("/v1/point-of-sale-cost")
                     .build("");
 
-            StringBuilder sb = buildMessageResponse(body);
-            GraphPOSResponse response = new GraphPOSResponse(sb.toString());
-            return ResponseEntity.created(location).body(response);
+            return ResponseEntity.created(location).body(createMessage(body.pointA(), body.pointB(),body.cost()));
         }
 
     @DeleteMapping("/remove")
@@ -45,15 +46,8 @@ public class PointOfSaleRouteCostController {
                 .path("/v1/point-of-sale-cost/remove")
                 .build("");
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("Se removio con exito el camino entre ");
-        sb.append(body.pointA());
-        sb.append(" y ");
-        sb.append(body.pointB());
 
-        GraphPOSResponse response = new GraphPOSResponse(sb.toString());
-
-        return ResponseEntity.created(location).body(response);
+        return ResponseEntity.created(location).body(removeMessage(body.pointA(), body.pointB()));
     }
 
     @GetMapping("/findAll")
@@ -64,16 +58,5 @@ public class PointOfSaleRouteCostController {
     @GetMapping("/showMinimumRoutes")
     public List<MinimumGraphPOSDto> showMinimumRoutes() {
         return graphPosService.showMinimumRoutes();
-    }
-
-    private static @NonNull StringBuilder buildMessageResponse(CreateGraphPOSRequest body) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Se creo el camino entre");
-        sb.append(body.pointA());
-        sb.append(" y ");
-        sb.append(body.pointB());
-        sb.append("con un costo de: ");
-        sb.append(body.cost());
-        return sb;
     }
 }

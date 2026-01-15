@@ -2,14 +2,14 @@ package com.challenge_2026.punto_de_venta_acc.dto;
 
 public class GraphPOSDto {
     private String originPOS;
-    private String destionationPOS;
+    private String destinationPOS;
     private Integer cost;
 
     public GraphPOSDto() {}
 
     public GraphPOSDto(String originPOS, String destinationPOS, Integer cost) {
         this.originPOS = originPOS;
-        this.destionationPOS = destinationPOS;
+        this.destinationPOS = destinationPOS;
         this.cost = cost;
     }
 
@@ -21,12 +21,12 @@ public class GraphPOSDto {
         this.originPOS = originPOS;
     }
 
-    public String getDestionationPOS() {
-        return destionationPOS;
+    public String getDestinationPOS() {
+        return destinationPOS;
     }
 
-    public void setDestionationPOS(String destionationPOS) {
-        this.destionationPOS = destionationPOS;
+    public void setDestinationPOS(String destinationPOS) {
+        this.destinationPOS = destinationPOS;
     }
 
     public Integer getCost() {
