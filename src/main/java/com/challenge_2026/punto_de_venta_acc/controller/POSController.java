@@ -42,7 +42,7 @@ public class POSController {
                 .path("/v1/point-of-sale/{id}")
                 .build(created.id());
 
-        return ResponseEntity.created(location).body(null);
+        return ResponseEntity.created(location).body(new POSResponse(created.id(), created.name()));
     }
 
 

@@ -314,7 +314,6 @@ public record GraphPOSResponse(String message) {}
 ## Mejoras sugeridas
 
 - Homogeneizar los mensajes de `GraphPOSResponse` (agregar espacios faltantes en `create`) para legibilidad.
-- En `POST /point-of-sale/create`, considerar devolver un `POSResponse` con datos del POS creado (en lugar de `null`).
 - Evaluar responder `200 OK` en `DELETE /point-of-sale-cost/remove` si se busca una semántica REST más conservadora.
 - Normalizar `destionationPOS` → `destinationPOS` (quebraría el contrato JSON actual; considerar versión de API o mapeo de compatibilidad).
 
