@@ -1,46 +1,70 @@
-version: '3.8'
 
-networks:
-  my_custom_network:
-    external: true # Indica que la red ya existe en Podman
+version: "3.9"
 
 services:
-  point_of_sale_app:
+  app:
     build:
       context: .
       dockerfile: Dockerfile
+    image: localhost/pos-service:dev
+    container_name: pos-service
     ports:
       - "8080:8080"
     environment:
-      - SPRING_DATA_MONGODB_URI=mongodb://mongo:27017/posdb
-      - SPRING_REDIS_HOST=redis
-      - SPRING_REDIS_PORT=6379
+      SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/posdb
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: "6379"
+      SERVER_PORT: "8080"
     depends_on:
-      - mongo
-      - redis
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health | grep -E 'UP|\"status\":\"UP\"' || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
     networks:
-      - my_custom_network
+      - backend
 
   mongo:
     image: mongo:6.0
     container_name: mongo
     ports:
       - "27017:27017"
-    environment:
-      - MONGO_INITDB_DATABASE=posdb
     volumes:
       - mongo-data:/data/db
+      # Si necesitás un script de init en el primer arranque:
       - ./db-init.js:/docker-entrypoint-initdb.d/db-init.js:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mongosh --quiet --eval 'db.runCommand({ ping: 1 }).ok' | grep 1 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
     networks:
-      - my_custom_network
+      - backend
 
   redis:
-    image: redis:7.0
+    image: redis:7-alpine
     container_name: redis
     ports:
       - "6379:6379"
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
     networks:
-      - my_custom_network
+      - backend
+
+networks:
+  backend: {}
 
 volumes:
-    mongo-data: { }
+  mongo-data: {}
+  redis-data: {}
