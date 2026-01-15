@@ -1,5 +1,9 @@
 version: '3.8'
 
+networks:
+  my_custom_network:
+    external: true # Indica que la red ya existe en Podman
+
 services:
   point_of_sale_app:
     build:
@@ -8,12 +12,14 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - SPRING_DATA_MONGODB_URI=mongodb://mongo:27017/punto_de_venta
+      - SPRING_DATA_MONGODB_URI=mongodb://mongo:27017/posdb
       - SPRING_REDIS_HOST=redis
       - SPRING_REDIS_PORT=6379
     depends_on:
       - mongo
       - redis
+    networks:
+      - my_custom_network
 
   mongo:
     image: mongo:6.0
@@ -22,12 +28,16 @@ services:
       - "27017:27017"
     volumes:
       - mongo_data:/data/db
+    networks:
+      - my_custom_network
 
   redis:
     image: redis:7.0
     container_name: redis
     ports:
       - "6379:6379"
+    networks:
+      - my_custom_network
 
 volumes:
   mongo_data:
