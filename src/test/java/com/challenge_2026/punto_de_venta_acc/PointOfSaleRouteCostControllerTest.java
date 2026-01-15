@@ -56,7 +56,7 @@ class PointOfSaleRouteCostControllerTest {
         assertNotNull(respBody);
         // IMPORTANTE: el método buildMessageResponse concatena sin espacios entre "entre" y A,
         // y sin espacio antes de "con un costo de" según el código actual.
-        String esperado = "Se creo el camino entre" + "A" + " y " + "B" + "con un costo de: " + 10;
+        String esperado = "Se creo el camino entre " + "A" + " y " + "B" + " con un costo de: " + 10;
         // Si GraphPOSResponse es un record con accessor message():
         try {
             // Preferimos llamar respBody.message() si existe
@@ -95,7 +95,7 @@ class PointOfSaleRouteCostControllerTest {
 
         GraphPOSResponse respBody = response.getBody();
         assertNotNull(respBody);
-        String esperado = "Se removio con exito el camino entre " + "A" + " y " + "B";
+        String esperado = "Se removio con éxito el camino entre " + "A" + " y " + "B";
         try {
             String actual = (String) respBody.getClass().getMethod("message").invoke(respBody);
             assertEquals(esperado, actual);

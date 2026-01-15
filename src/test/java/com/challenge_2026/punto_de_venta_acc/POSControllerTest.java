@@ -62,7 +62,7 @@ class POSControllerTest {
         // La URL esperada es /v1/point-of-sale/{id}
         assertTrue(location.toString().endsWith("/v1/point-of-sale/123"),
                 "Location debería terminar en /v1/point-of-sale/123 pero fue: " + location);
-        assertNull(response.getBody(), "El body debe ser null según la implementación actual");
+        assertNotNull(response.getBody(), "El body no debe ser null según la implementación actual");
         verify(posService).create(any(PointOfSale.class));
         verifyNoMoreInteractions(posService);
     }
