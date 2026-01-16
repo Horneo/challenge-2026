@@ -1,4 +1,8 @@
-
+---
+Pasos a ejecutar para correr el caso de uso de todos los enunciados de punto de venta(enunciado 1 y 2)
+1) Levantar el docker composer con podman - esto te crea un pod_punto-de-venta-acc
+2) Una vez levantado el pod, ir cargar la coleccion postman y ejecutar enunciado 1 y 2 que corresponden a este ms.
+---
 # Punto de Venta – API Controllers
 
 Este documento describe los endpoints expuestos por los controladores del módulo **Punto de Venta**, junto con los DTOs involucrados y ejemplos de requests/responses.
@@ -309,14 +313,6 @@ public record GraphPOSResponse(String message) {}
     - En Spring 6, `ResponseEntity#getStatusCode()` devuelve `HttpStatusCode`; comparar con `HttpStatus` o usar `getStatusCodeValue()` si se compara con `int`.
     - Verificar encabezados `Location` en respuestas `201`.
 
----
-
-## Mejoras sugeridas
-
-- Homogeneizar los mensajes de `GraphPOSResponse` (agregar espacios faltantes en `create`) para legibilidad.
-- Evaluar responder `200 OK` en `DELETE /point-of-sale-cost/remove` si se busca una semántica REST más conservadora.
-- Normalizar `destionationPOS` → `destinationPOS` (quebraría el contrato JSON actual; considerar versión de API o mapeo de compatibilidad).
-
----
+  
 
 © 2026 — Punto de Venta API
