@@ -32,4 +32,3 @@ EXPOSE 8081
 # En tu Dockerfile del MS2
 ENTRYPOINT ["java"]
 CMD ["-jar","/app/app.jar"]
-

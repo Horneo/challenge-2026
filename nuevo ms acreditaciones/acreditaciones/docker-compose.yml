@@ -4,53 +4,22 @@ version: "3.9"
 services:
   acreditaciones-service:
     build:
-      context: .               # carpeta donde está el Dockerfile del MS2
-      dockerfile: Dockerfile   # cambialo si tu archivo se llama distinto
+      context: .
+      dockerfile: Dockerfile
     image: localhost/acreditaciones-service:dev
     container_name: acreditaciones-service
 
     networks:
       - punto-de-venta-acc_backend
 
-    # Preferimos JAVA_TOOL_OPTIONS para que la JVM reciba los -D aunque la imagen traiga ENTRYPOINT "-jar".
     environment:
-      JAVA_TOOL_OPTIONS: "--enable-native-access=ALL-UNNAMED -Dspring.data.mongodb.uri=mongodb://mongo:27017/posdb -Dclients.pos.base-url=http://pos-service:8080 -Dserver.port=8081"
-
-      # (Opcional) Variables espejo por compatibilidad si tu app también las usa
-      SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/posdb
+      JAVA_TOOL_OPTIONS: "--enable-native-access=ALL-UNNAMED -Dspring.data.mongodb.uri=mongodb://mongo:27017/acreditacionesdb -Dclients.pos.base-url=http://pos-service:8080 -Dserver.port=8081"
+      SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/acreditacionesdb
       CLIENTS_POS_BASE_URL: http://pos-service:8080
       SERVER_PORT: "8081"
 
-    # Exponé el puerto hacia tu host si vas a probar desde el browser/Postman
     ports:
       - "8081:8081"
-
-    entrypoint:
-      - "java"
-      - "--enable-native-access=ALL-UNNAMED"
-      - "-Dspring.data.mongodb.uri=mongodb://mongo:27017/posdb"   # o /acreditacionesdb
-      - "-Dclients.pos.base-url=http://pos-service:8080"
-      - "-Dserver.port=8081"
-      - "-jar"
-      - "/app/app.jar"
-
-
-    # Healthcheck (elige según tu imagen base)
-    # Si tu imagen trae curl:
-    # healthcheck:
-    #   test: ["CMD-SHELL", "curl -fsS http://localhost:8081/actuator/health | grep -E 'UP|\"status\":\"UP\"'"]
-    #   interval: 15s
-    #   timeout: 5s
-    #   start_period: 20s
-    #   retries: 10
-
-    # Si tu imagen trae wget:
-    # healthcheck:
-    #   test: ["CMD-SHELL", "wget -qO- http://localhost:8081/actuator/health | grep -E 'UP|\"status\":\"UP\"'"]
-    #   interval: 15s
-    #   timeout: 5s
-    #   start_period: 20s
-    #   retries: 10
 
 networks:
   punto-de-venta-acc_backend:
