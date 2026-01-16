@@ -7,11 +7,18 @@ services:
       context: .
       dockerfile: Dockerfile
     image: localhost/pos-service:dev
+
+    command:
+      - "java"
+      - "-Dspring.data.mongodb.uri=mongodb://mongo:27017/posdb"
+      - "-jar"
+      - "/app/app.jar"
     container_name: pos-service
     ports:
       - "8080:8080"
     environment:
       SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/posdb
+      SPRING_MONGODB_URI: mongodb://mongo:27017/posdb         # por compatibilida
       SPRING_REDIS_HOST: redis
       SPRING_REDIS_PORT: "6379"
       SERVER_PORT: "8080"
@@ -20,8 +27,9 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+    # Healthcheck que no requiere wget/curl (usa /dev/tcp)
     healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health | grep -E 'UP|\"status\":\"UP\"' || exit 1"]
+      test: ["CMD-SHELL", "exec 3<>/dev/tcp/localhost/8080; echo -e 'GET /actuator/health HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n' >&3; cat <&3 | grep -E 'UP|\"status\":\"UP\"' || exit 1"]
       interval: 15s
       timeout: 5s
       retries: 10
