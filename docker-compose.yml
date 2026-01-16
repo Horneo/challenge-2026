@@ -18,7 +18,7 @@ services:
       - "8080:8080"
     environment:
       SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/posdb
-      SPRING_MONGODB_URI: mongodb://mongo:27017/posdb         # por compatibilida
+      SPRING_MONGODB_URI: mongodb://mongo:27017/posdb
       SPRING_REDIS_HOST: redis
       SPRING_REDIS_PORT: "6379"
       SERVER_PORT: "8080"
@@ -27,7 +27,7 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-    # Healthcheck que no requiere wget/curl (usa /dev/tcp)
+    # ⚠️ Si tu imagen base no tiene bash, este healthcheck puede fallar. Considerá curl/wget.
     healthcheck:
       test: ["CMD-SHELL", "exec 3<>/dev/tcp/localhost/8080; echo -e 'GET /actuator/health HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n' >&3; cat <&3 | grep -E 'UP|\"status\":\"UP\"' || exit 1"]
       interval: 15s
@@ -35,7 +35,7 @@ services:
       retries: 10
       start_period: 20s
     networks:
-      - backend
+      - punto-de-venta-acc_backend
 
   mongo:
     image: mongo:6.0
@@ -44,15 +44,14 @@ services:
       - "27017:27017"
     volumes:
       - mongo-data:/data/db
-      # Si necesitás un script de init en el primer arranque:
-      - ./db-init.js:/docker-entrypoint-initdb.d/db-init.js:ro
+      # - ./db-init.js:/docker-entrypoint-initdb.d/db-init.js:ro
     healthcheck:
       test: ["CMD-SHELL", "mongosh --quiet --eval 'db.runCommand({ ping: 1 }).ok' | grep 1 || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 10
     networks:
-      - backend
+      - punto-de-venta-acc_backend
 
   redis:
     image: redis:7-alpine
@@ -68,10 +67,12 @@ services:
       timeout: 3s
       retries: 10
     networks:
-      - backend
+      - punto-de-venta-acc_backend
 
 networks:
-  backend: {}
+  punto-de-venta-acc_backend:
+    name: punto-de-venta-acc_backend
+    external: false
 
 volumes:
   mongo-data: {}
