@@ -3,53 +3,54 @@ version: "3.9"
 
 services:
   acreditaciones-service:
-    # Construye la imagen localmente (evita el intento de "pull" a localhost registry)
     build:
       context: .               # carpeta donde está el Dockerfile del MS2
-      dockerfile: Dockerfile   # cambiá si tu Dockerfile se llama distinto
+      dockerfile: Dockerfile   # cambialo si tu archivo se llama distinto
     image: localhost/acreditaciones-service:dev
     container_name: acreditaciones-service
 
-    # Misma network que el MS1 (creada por el compose del MS1)
     networks:
       - punto-de-venta-acc_backend
 
-    # Forzamos propiedades críticas por JVM (máxima prioridad)
+    # Preferimos JAVA_TOOL_OPTIONS para que la JVM reciba los -D aunque la imagen traiga ENTRYPOINT "-jar".
+    environment:
+      JAVA_TOOL_OPTIONS: "--enable-native-access=ALL-UNNAMED -Dspring.data.mongodb.uri=mongodb://mongo:27017/posdb -Dclients.pos.base-url=http://pos-service:8080 -Dserver.port=8081"
 
-    command:
-      - "-Dspring.data.mongodb.uri=mongodb://mongo:27017/posdb"
+      # (Opcional) Variables espejo por compatibilidad si tu app también las usa
+      SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/posdb
+      CLIENTS_POS_BASE_URL: http://pos-service:8080
+      SERVER_PORT: "8081"
+
+    # Exponé el puerto hacia tu host si vas a probar desde el browser/Postman
+    ports:
+      - "8081:8081"
+
+    entrypoint:
+      - "java"
+      - "--enable-native-access=ALL-UNNAMED"
+      - "-Dspring.data.mongodb.uri=mongodb://mongo:27017/posdb"   # o /acreditacionesdb
       - "-Dclients.pos.base-url=http://pos-service:8080"
       - "-Dserver.port=8081"
       - "-jar"
       - "/app/app.jar"
 
-    # Variables duplicadas por compatibilidad (si tu app las usa); las de JVM siguen teniendo prioridad
-    environment:
-      SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/posdb
-      CLIENTS_POS_BASE_URL: http://pos-service:8080
-      SERVER_PORT: "8081"
 
-    ports:
-      - "8081:8081"
-
-    # Healthcheck (elige una opción según tu imagen base)
-    # Opción A: con curl (si tu imagen trae curl)
+    # Healthcheck (elige según tu imagen base)
+    # Si tu imagen trae curl:
     # healthcheck:
     #   test: ["CMD-SHELL", "curl -fsS http://localhost:8081/actuator/health | grep -E 'UP|\"status\":\"UP\"'"]
     #   interval: 15s
     #   timeout: 5s
     #   start_period: 20s
     #   retries: 10
-    #
-    # Opción B: con wget (si tu imagen trae wget)
+
+    # Si tu imagen trae wget:
     # healthcheck:
     #   test: ["CMD-SHELL", "wget -qO- http://localhost:8081/actuator/health | grep -E 'UP|\"status\":\"UP\"'"]
     #   interval: 15s
     #   timeout: 5s
     #   start_period: 20s
     #   retries: 10
-    #
-    # Si tu imagen no trae ni curl ni wget y no querés modificar el Dockerfile, podés omitir el healthcheck.
 
 networks:
   punto-de-venta-acc_backend:
