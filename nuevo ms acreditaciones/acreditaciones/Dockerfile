@@ -27,5 +27,9 @@ WORKDIR /app
 COPY --from=build /workspace/target/*.jar /app/app.jar
 ENV JAVA_TOOL_OPTIONS="-XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0"
 EXPOSE 8081
-ENTRYPOINT ["java","-jar","/app/app.jar"]
+
+
+# En tu Dockerfile del MS2
+ENTRYPOINT ["java"]
+CMD ["-jar","/app/app.jar"]
 

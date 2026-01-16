@@ -15,11 +15,10 @@ services:
       - punto-de-venta-acc_backend
 
     # Forzamos propiedades críticas por JVM (máxima prioridad)
+
     command:
-      - "java"
-      - "--enable-native-access=ALL-UNNAMED"                    # opcional: silencia warnings de Netty en Java 21/25
       - "-Dspring.data.mongodb.uri=mongodb://mongo:27017/posdb"
-      - "-Dclients.pos.base-url=http://pos-service:8080"        # así MS2 llama al MS1 dentro de la network
+      - "-Dclients.pos.base-url=http://pos-service:8080"
       - "-Dserver.port=8081"
       - "-jar"
       - "/app/app.jar"
