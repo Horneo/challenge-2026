@@ -1,7 +1,7 @@
 ---
-Pasos a ejecutar para correr el caso de uso de todos los enunciados de punto de venta(enunciado 1 y 2)
-1) Levantar el docker composer con podman - esto te crea un pod_punto-de-venta-acc
-2) Una vez levantado el pod, ir cargar la coleccion postman y ejecutar enunciado 1 y 2 que corresponden a este ms.
+Pasos a ejecutar para correr el caso de uso de todos los enunciados de punto de venta(enunciado 1, 2 y 3)
+1) Levantar el docker composer con podman-compose - esto te crea un pod_punto-de-venta-acc: podman-compose up mongo redis pos-service acreditaciones-service
+2) Una vez levantado el pod, ir cargar la coleccion postman y ejecutar enunciado 1, 2 y 3 que corresponden a este ms.
 ---
 # Punto de Venta – API Controllers
 
