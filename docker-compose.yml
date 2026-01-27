@@ -45,6 +45,7 @@ services:
       - "8081:8081"
     environment:
       SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/posdb
+      SPRING_MONGODB_URI: mongodb://mongo:27017/posdbs
       CLIENTS_POS_BASE_URL: http://pos-service:8080
       SERVER_PORT: "8081"
     depends_on:
