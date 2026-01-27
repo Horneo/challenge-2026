@@ -24,11 +24,7 @@ RUN ./mvnw -q -B -DskipTests package
 # ===== Runtime stage =====
 FROM eclipse-temurin:25-jre
 WORKDIR /app
-COPY --from=build /workspace/target/*.jar /app/app.jar
+COPY --from=build /workspace/target/*.jar /app/ms2-app.jar
 ENV JAVA_TOOL_OPTIONS="-XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0"
 EXPOSE 8081
-
-
-# En tu Dockerfile del MS2
-ENTRYPOINT ["java"]
-CMD ["-jar","/app/app.jar"]
+ENTRYPOINT ["sh","-c","java $JAVA_TOOL_OPTIONS -jar /app/ms2-app.jar"]

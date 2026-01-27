@@ -1,19 +1,18 @@
-
 version: "3.9"
 
 services:
-  app:
+  pos-service:
     build:
       context: .
       dockerfile: Dockerfile
     image: localhost/pos-service:dev
+    container_name: pos-service
 
     command:
       - "java"
       - "-Dspring.data.mongodb.uri=mongodb://mongo:27017/posdb"
       - "-jar"
       - "/app/app.jar"
-    container_name: pos-service
     ports:
       - "8080:8080"
     environment:
@@ -27,13 +26,32 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-    # ⚠️ Si tu imagen base no tiene bash, este healthcheck puede fallar. Considerá curl/wget.
     healthcheck:
       test: ["CMD-SHELL", "exec 3<>/dev/tcp/localhost/8080; echo -e 'GET /actuator/health HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n' >&3; cat <&3 | grep -E 'UP|\"status\":\"UP\"' || exit 1"]
       interval: 15s
       timeout: 5s
       retries: 10
       start_period: 20s
+    networks:
+      - punto-de-venta-acc_backend
+
+  acreditaciones-service:
+    build:
+      context: ./nuevo-ms-acreditaciones/acreditaciones
+      dockerfile: Dockerfile
+    image: localhost/acreditaciones-service:dev
+    container_name: acreditaciones-service
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/posdb
+      CLIENTS_POS_BASE_URL: http://pos-service:8080
+      SERVER_PORT: "8081"
+    depends_on:
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     networks:
       - punto-de-venta-acc_backend
 
@@ -44,7 +62,6 @@ services:
       - "27017:27017"
     volumes:
       - mongo-data:/data/db
-      # - ./db-init.js:/docker-entrypoint-initdb.d/db-init.js:ro
     healthcheck:
       test: ["CMD-SHELL", "mongosh --quiet --eval 'db.runCommand({ ping: 1 }).ok' | grep 1 || exit 1"]
       interval: 10s
