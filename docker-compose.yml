@@ -1,33 +1,70 @@
 version: "3.9"
 
 services:
+
+  grafana-lgtm:
+    image: grafana/otel-lgtm:latest
+    container_name: grafana-lgtm
+    ports:
+      - "3000:3000"  # Grafana UI
+      - "4317:4317"  # OTLP gRPC
+      - "4318:4318"  # OTLP HTTP
+    restart: unless-stopped
+    # Si querés persistencia real, considerá montar volúmenes (rutas dependen de la imagen):
+    # volumes:
+    #   - grafana-data:/var/lib/grafana
+    #   - loki-data:/var/lib/loki
+    #   - tempo-data:/var/lib/tempo
+    #   - prom-data:/var/lib/prometheus
+    networks:
+      - punto-de-venta-acc_backend
+
   pos-service:
     build:
       context: .
       dockerfile: Dockerfile
     image: localhost/pos-service:dev
     container_name: pos-service
-
-    command:
-      - "java"
-      - "-Dspring.data.mongodb.uri=mongodb://mongo:27017/posdb"
-      - "-jar"
-      - "/app/app.jar"
-    ports:
-      - "8080:8080"
+    restart: unless-stopped
+    # Opción A (ENV - recomendado): dejar que Spring lo lea desde variables:
     environment:
       SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/posdb
       SPRING_MONGODB_URI: mongodb://mongo:27017/posdb
       SPRING_REDIS_HOST: redis
       SPRING_REDIS_PORT: "6379"
       SERVER_PORT: "8080"
+      # Si usás el starter de OTel en Spring Boot 4 (sin agente), podés configurar:
+      # OPENTELEMETRY_TRACING_EXPORT_OTLP_ENDPOINT: http://grafana-lgtm:4318/v1/traces
+      # MANAGEMENT_OTLP_METRICS_EXPORT_URL: http://grafana-lgtm:4318/v1/metrics
+      # LOGGING_EXPORT_OTLP_ENDPOINT: http://grafana-lgtm:4318/v1/logs
+
+    # Opción B (JVM args): si preferís pasar properties por -D...
+    command:
+       - "java"
+       - "-Dspring.data.mongodb.uri=mongodb://mongo:27017/posdb"
+       - "-jar"
+       - "/app/app.jar"
+
+    # Si querés usar el Java Agent de OpenTelemetry (auto-instrumentación):
+    # volumes:
+    #   - ./opentelemetry-javaagent.jar:/app/opentelemetry-javaagent.jar:ro
+    # command:
+    #   - "java"
+    #   - "-javaagent:/app/opentelemetry-javaagent.jar"
+    #   - "-Dspring.data.mongodb.uri=mongodb://mongo:27017/posdb"
+    #   - "-jar"
+    #   - "/app/app.jar"
+
+    ports:
+      - "8080:8080"
     depends_on:
       mongo:
         condition: service_healthy
       redis:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "exec 3<>/dev/tcp/localhost/8080; echo -e 'GET /actuator/health HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n' >&3; cat <&3 | grep -E 'UP|\"status\":\"UP\"' || exit 1"]
+      # Usamos CMD-SHELL para evaluar el código de salida. Cambiá wget por curl si lo preferís.
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health | grep -q '\"status\"' || exit 1"]
       interval: 15s
       timeout: 5s
       retries: 10
@@ -38,33 +75,53 @@ services:
   acreditaciones-service:
     build:
       context: ./nuevo-ms-acreditaciones/acreditaciones
-      dockerfile: Dockerfile
     image: localhost/acreditaciones-service:dev
     container_name: acreditaciones-service
-    ports:
-      - "8081:8081"
+    restart: unless-stopped
     environment:
       SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/posdb
-      SPRING_MONGODB_URI: mongodb://mongo:27017/posdbs
+      SPRING_MONGODB_URI: mongodb://mongo:27017/posdb
       CLIENTS_POS_BASE_URL: http://pos-service:8080
       SERVER_PORT: "8081"
+      # Para OTel (sin agente), si corresponde:
+      # OPENTELEMETRY_TRACING_EXPORT_OTLP_ENDPOINT: http://grafana-lgtm:4318/v1/traces
+      # MANAGEMENT_OTLP_METRICS_EXPORT_URL: http://grafana-lgtm:4318/v1/metrics
+      # LOGGING_EXPORT_OTLP_ENDPOINT: http://grafana-lgtm:4318/v1/logs
+    # Si usás Java Agent en este servicio:
+    # volumes:
+    #   - ./opentelemetry-javaagent.jar:/app/opentelemetry-javaagent.jar:ro
+    # command:
+    #   - "java"
+    #   - "-javaagent:/app/opentelemetry-javaagent.jar"
+    #   - "-Dspring.data.mongodb.uri=mongodb://mongo:27017/posdb"
+    #   - "-jar"
+    #   - "/app/app.jar"
+    ports:
+      - "8081:8081"
     depends_on:
       mongo:
         condition: service_healthy
       redis:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8081/actuator/health | grep -q '\"status\"' || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
     networks:
       - punto-de-venta-acc_backend
 
   mongo:
     image: mongo:6.0
     container_name: mongo
+    restart: unless-stopped
     ports:
       - "27017:27017"
     volumes:
       - mongo-data:/data/db
     healthcheck:
-      test: ["CMD-SHELL", "mongosh --quiet --eval 'db.runCommand({ ping: 1 }).ok' | grep 1 || exit 1"]
+      test: ["CMD-SHELL", "mongosh --quiet --eval 'db.runCommand({ ping: 1 }).ok' | grep 1 >/dev/null || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -74,6 +131,7 @@ services:
   redis:
     image: redis:7-alpine
     container_name: redis
+    restart: unless-stopped
     ports:
       - "6379:6379"
     command: ["redis-server", "--appendonly", "yes"]
@@ -90,8 +148,12 @@ services:
 networks:
   punto-de-venta-acc_backend:
     name: punto-de-venta-acc_backend
-    external: false
+    driver: bridge
 
 volumes:
+  grafana-data: {}
+  loki-data: {}
+  tempo-data: {}
+  prom-data: {}
   mongo-data: {}
   redis-data: {}

@@ -23,6 +23,7 @@ import static org.mockito.Mockito.*;
 class POSControllerTest {
 
     private POSService posService;
+
     private POSController controller;
     private UriComponentsBuilder uriBuilder;
 

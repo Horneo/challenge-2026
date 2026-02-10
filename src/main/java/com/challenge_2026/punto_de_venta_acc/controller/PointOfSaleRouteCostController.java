@@ -5,6 +5,7 @@ import com.challenge_2026.punto_de_venta_acc.mapper.ResponseGraphPOSMapper;
 import com.challenge_2026.punto_de_venta_acc.service.GraphPOSService;
 import jakarta.validation.Valid;
 import org.jspecify.annotations.NonNull;
+import org.slf4j.Logger;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -19,6 +20,8 @@ import static com.challenge_2026.punto_de_venta_acc.dto.GraphPOSResponse.removeM
 @RequestMapping("/v1/point-of-sale-cost") // Prefijo para todos los endpoints de este controlle
 public class PointOfSaleRouteCostController {
 
+    private static final Logger logger = org.slf4j.LoggerFactory.getLogger(PointOfSaleRouteCostController.class);
+
     private final GraphPOSService graphPosService;
 
     // Spring inyecta automáticamente el bean POSService
@@ -29,6 +32,7 @@ public class PointOfSaleRouteCostController {
         @PostMapping("/create")
         public ResponseEntity<GraphPOSResponse> createRoute(@RequestBody @Valid CreateGraphPOSRequest body, UriComponentsBuilder uriBuilder) {
 
+            logger.info("endpoint createRoute called  with body: {}", body);
             graphPosService.create(ResponseGraphPOSMapper.toEntity(body));
             URI location = uriBuilder
                     .path("/v1/point-of-sale-cost")
@@ -40,6 +44,7 @@ public class PointOfSaleRouteCostController {
     @DeleteMapping("/remove")
     public ResponseEntity<GraphPOSResponse> removeRoute(@RequestBody @Valid DeleteGraphPOSRequest body, UriComponentsBuilder uriBuilder) {
 
+        logger.info("endpoint removeRoute called with body: {}", body);
         graphPosService.delete(body.pointA(), body.pointB());
 
         URI location = uriBuilder
@@ -52,6 +57,7 @@ public class PointOfSaleRouteCostController {
 
     @GetMapping("/findAll")
     public List<GraphPOSDto> findAllGraphPOS() {
+        logger.info("endpoint findAllGraphPOS called");
         return graphPosService.findAll();
     }
 

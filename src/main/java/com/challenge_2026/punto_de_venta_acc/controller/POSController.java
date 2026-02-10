@@ -6,6 +6,7 @@ import com.challenge_2026.punto_de_venta_acc.dto.POSResponse;
 import com.challenge_2026.punto_de_venta_acc.dto.UpdatePOSRequest;
 import com.challenge_2026.punto_de_venta_acc.model.PointOfSale;
 import com.challenge_2026.punto_de_venta_acc.service.POSService;
+import org.slf4j.Logger;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -18,16 +19,21 @@ import java.util.NoSuchElementException;
 @RequestMapping("/v1/point-of-sale") // Prefijo para todos los endpoints de este controlle
 public class POSController {
 
+    private static final Logger logger = org.slf4j.LoggerFactory.getLogger(POSController.class);
+
     private final POSService posService;
 
     // Spring inyecta automáticamente el bean POSService
     public POSController(POSService posService) {
+
         this.posService = posService;
     }
 
 
     @GetMapping("/findAll")
-    public List<POSDto> findAllPOS() {
+    public List<POSDto> findAllPOS()
+    {
+        logger.info("endpoint Find all POS called");
         return posService.findAll();
     }
 
@@ -35,6 +41,7 @@ public class POSController {
     @PostMapping("/create")
     public ResponseEntity<POSResponse> createPOS(
             @RequestBody CreatePOSRequest request, UriComponentsBuilder uriBuilder) {
+        logger.info("endpoint createPos called with name: {}", request.name());
 
         PointOfSale created = posService.create(PointOfSale.from(request));
         //Construye la URL del recurso recién creado: /v1/point-of-sale/{id}
@@ -50,6 +57,7 @@ public class POSController {
     public ResponseEntity<UpdatePOSRequest> put(
             @PathVariable Long id,
             @RequestBody UpdatePOSRequest body) {
+        logger.info("endpoint updatePos called with id: {} and new name: {}", id, body.name());
         try {
             PointOfSale updated = posService.updateNamePointOfSale(String.valueOf(id), body.name());
             return ResponseEntity.ok(body);
@@ -61,6 +69,7 @@ public class POSController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(
             @PathVariable Long id) {
+        logger.info("endpoint deletePos called with id: {}", id);
         posService.delete(String.valueOf(id));
         return ResponseEntity.ok("POS Deleted");
     }
