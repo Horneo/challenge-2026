@@ -8,6 +8,7 @@ COPY mvnw ./
 COPY .mvn .mvn
 COPY pom.xml .
 
+
 # 🔧 Fix permisos + finales de línea (CRLF -> LF)
 RUN chmod +x mvnw && sed -i 's/\r$//' mvnw
 
@@ -26,5 +27,6 @@ FROM eclipse-temurin:25-jre
 WORKDIR /app
 COPY --from=build /workspace/target/*.jar /app/ms2-app.jar
 ENV JAVA_TOOL_OPTIONS="-XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0"
+ENV MVNW_REPOURL=https://repo1.maven.org/maven2
 EXPOSE 8081
 ENTRYPOINT ["sh","-c","java $JAVA_TOOL_OPTIONS -jar /app/ms2-app.jar"]

@@ -2,8 +2,10 @@ package com.example.acreditaciones.service;
 
 import com.example.acreditaciones.dto.FundAccreditationDTO;
 import com.example.acreditaciones.dto.PosDTO;
-import com.example.acreditaciones.model.FundAccreditation;
-import com.example.acreditaciones.repository.FundAccreditationRepository;
+//import com.example.acreditaciones.model.FundAccreditation;
+//import com.example.acreditaciones.repository.FundAccreditationRepository;
+import com.example.acreditaciones.entity.FundAccreditationPOS;
+import com.example.acreditaciones.repository.FundAccreditationRepo;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -20,9 +22,9 @@ public class FundAccreditationService {
 
     private final WebClient webClient;
 
-    private final FundAccreditationRepository repo;
+    private FundAccreditationRepo repo;
 
-    public FundAccreditationService(@Qualifier("posWebClient") WebClient webClient, FundAccreditationRepository repo) {
+    public FundAccreditationService(@Qualifier("posWebClient") WebClient webClient, FundAccreditationRepo repo) {
 
         this.webClient= webClient;
         this.repo = repo;
@@ -53,7 +55,7 @@ public class FundAccreditationService {
                 throw new RuntimeException("El id de punto de venta no existe");
             }
 
-        FundAccreditation fundAccreditation = new FundAccreditation(null, Instant.now(), dto.amount(), dto.idPointOfSale(), pointOfSaleName);
+        FundAccreditationPOS fundAccreditation = new FundAccreditationPOS(Instant.now(), dto.amount(), dto.idPointOfSale(), pointOfSaleName);
         repo.save(fundAccreditation);
     }
 }
