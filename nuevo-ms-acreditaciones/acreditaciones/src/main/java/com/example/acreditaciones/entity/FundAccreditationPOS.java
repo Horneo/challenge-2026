@@ -10,8 +10,12 @@ import java.time.Instant;
 public class FundAccreditationPOS {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column
+    @SequenceGenerator(
+            name = "fund_pos_seq",
+            sequenceName = "FUND_ACCREDITATION_POS_SEQ",
+            allocationSize = 1 // importante en H2 para evitar saltos
+    )
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "fund_pos_seq")
     private Long id;
 
     @Column(name="received_at")

@@ -5,7 +5,7 @@ import com.challenge_2026.punto_de_venta_acc.dto.POSDto;
 import com.challenge_2026.punto_de_venta_acc.dto.POSResponse;
 import com.challenge_2026.punto_de_venta_acc.dto.UpdatePOSRequest;
 import com.challenge_2026.punto_de_venta_acc.model.PointOfSale;
-import com.challenge_2026.punto_de_venta_acc.service.POSService;
+import com.challenge_2026.punto_de_venta_acc.service.impl.POSServiceImpl;
 import org.slf4j.Logger;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,10 +21,10 @@ public class POSController {
 
     private static final Logger logger = org.slf4j.LoggerFactory.getLogger(POSController.class);
 
-    private final POSService posService;
+    private final POSServiceImpl posService;
 
     // Spring inyecta automáticamente el bean POSService
-    public POSController(POSService posService) {
+    public POSController(POSServiceImpl posService) {
 
         this.posService = posService;
     }
@@ -47,9 +47,9 @@ public class POSController {
         //Construye la URL del recurso recién creado: /v1/point-of-sale/{id}
         URI location = uriBuilder
                 .path("/v1/point-of-sale/{id}")
-                .build(created.id());
+                .build(created.getId());
 
-        return ResponseEntity.created(location).body(new POSResponse(created.id(), created.name()));
+        return ResponseEntity.created(location).body(new POSResponse(created.getId(), created.getName()));
     }
 
 

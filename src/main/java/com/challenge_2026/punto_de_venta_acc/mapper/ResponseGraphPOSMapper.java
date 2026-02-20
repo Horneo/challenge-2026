@@ -11,7 +11,7 @@ import org.mapstruct.Mapper;
 public interface ResponseGraphPOSMapper {
 
     static GraphPOSDto toDto( GraphPointOfSale dto) {
-        return new GraphPOSDto(dto.originPointOfSale(), dto.destinationPointOfSale(), dto.cost());
+        return new GraphPOSDto(dto.getOriginPointOfSale(), dto.getDestinationPointOfSale(), dto.getCost());
     }
 
     static GraphPointOfSale toEntity(CreateGraphPOSRequest dto) {

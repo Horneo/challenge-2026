@@ -6,7 +6,7 @@ import com.challenge_2026.punto_de_venta_acc.dto.DeleteGraphPOSRequest;
 import com.challenge_2026.punto_de_venta_acc.dto.GraphPOSDto;
 import com.challenge_2026.punto_de_venta_acc.dto.GraphPOSResponse;
 import com.challenge_2026.punto_de_venta_acc.dto.MinimumGraphPOSDto;
-import com.challenge_2026.punto_de_venta_acc.service.GraphPOSService;
+import com.challenge_2026.punto_de_venta_acc.service.impl.GraphPOSServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
@@ -22,13 +22,13 @@ import static org.springframework.http.HttpStatus.*;
 
 class PointOfSaleRouteCostControllerTest {
 
-    private GraphPOSService graphPOSService;
+    private GraphPOSServiceImpl graphPOSService;
     private PointOfSaleRouteCostController controller;
     private UriComponentsBuilder uriBuilder;
 
     @BeforeEach
     void setUp() {
-        graphPOSService = mock(GraphPOSService.class);
+        graphPOSService = mock(GraphPOSServiceImpl.class);
         controller = new PointOfSaleRouteCostController(graphPOSService);
         uriBuilder = UriComponentsBuilder.fromPath("");
     }

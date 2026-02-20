@@ -10,7 +10,7 @@ import org.mapstruct.Mapper;
 public interface ResponsePOSMapper {
 
     static POSDto toEntity(PointOfSale dto) {
-        return new POSDto(dto.id(), dto.name());
+        return new POSDto(dto.getId(), dto.getName());
     }
 }
 

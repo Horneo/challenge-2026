@@ -10,7 +10,7 @@ import org.mapstruct.Mapper;
 public interface ResponseMinimumGraphPOSMapper {
 
     static MinimumGraphPOSDto toDto(GraphPointOfSale dto) {
-        return new MinimumGraphPOSDto(dto.originPointOfSale(), dto.destinationPointOfSale(), dto.cost());
+        return new MinimumGraphPOSDto(dto.getOriginPointOfSale(), dto.getDestinationPointOfSale(), dto.getCost());
     }
 }
 

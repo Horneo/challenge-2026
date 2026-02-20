@@ -6,7 +6,7 @@ import com.challenge_2026.punto_de_venta_acc.dto.POSDto;
 import com.challenge_2026.punto_de_venta_acc.dto.POSResponse;
 import com.challenge_2026.punto_de_venta_acc.dto.UpdatePOSRequest;
 import com.challenge_2026.punto_de_venta_acc.model.PointOfSale;
-import com.challenge_2026.punto_de_venta_acc.service.POSService;
+import com.challenge_2026.punto_de_venta_acc.service.impl.POSServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
@@ -22,14 +22,14 @@ import static org.mockito.Mockito.*;
 
 class POSControllerTest {
 
-    private POSService posService;
+    private POSServiceImpl posService;
 
     private POSController controller;
     private UriComponentsBuilder uriBuilder;
 
     @BeforeEach
     void setUp() {
-        posService = mock(POSService.class);
+        posService = mock(POSServiceImpl.class);
         controller = new POSController(posService);
         uriBuilder = UriComponentsBuilder.fromPath("");
     }
@@ -50,7 +50,7 @@ class POSControllerTest {
         // Arrange
         CreatePOSRequest req = mock(CreatePOSRequest.class);
         PointOfSale created = mock(PointOfSale.class);
-        when(created.id()).thenReturn(String.valueOf(123L));
+        when(created.getId()).thenReturn(String.valueOf(123L));
         when(posService.create(any(PointOfSale.class))).thenReturn(created);
 
         // Act

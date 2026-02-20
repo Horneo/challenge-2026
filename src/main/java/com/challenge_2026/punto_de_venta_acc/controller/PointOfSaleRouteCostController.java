@@ -2,9 +2,8 @@ package com.challenge_2026.punto_de_venta_acc.controller;
 
 import com.challenge_2026.punto_de_venta_acc.dto.*;
 import com.challenge_2026.punto_de_venta_acc.mapper.ResponseGraphPOSMapper;
-import com.challenge_2026.punto_de_venta_acc.service.GraphPOSService;
+import com.challenge_2026.punto_de_venta_acc.service.impl.GraphPOSServiceImpl;
 import jakarta.validation.Valid;
-import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,10 +21,10 @@ public class PointOfSaleRouteCostController {
 
     private static final Logger logger = org.slf4j.LoggerFactory.getLogger(PointOfSaleRouteCostController.class);
 
-    private final GraphPOSService graphPosService;
+    private final GraphPOSServiceImpl graphPosService;
 
     // Spring inyecta automáticamente el bean POSService
-    public PointOfSaleRouteCostController(GraphPOSService posService) {
+    public PointOfSaleRouteCostController(GraphPOSServiceImpl posService) {
         this.graphPosService = posService;
     }
 
