@@ -4,7 +4,7 @@ import com.challenge_2026.punto_de_venta_acc.dto.CreatePOSRequest;
 import com.challenge_2026.punto_de_venta_acc.dto.POSDto;
 import com.challenge_2026.punto_de_venta_acc.dto.POSResponse;
 import com.challenge_2026.punto_de_venta_acc.dto.UpdatePOSRequest;
-import com.challenge_2026.punto_de_venta_acc.model.PointOfSale;
+import com.challenge_2026.punto_de_venta_acc.entity.PointOfSale;
 import com.challenge_2026.punto_de_venta_acc.service.impl.POSServiceImpl;
 import org.slf4j.Logger;
 import org.springframework.http.ResponseEntity;
@@ -59,7 +59,7 @@ public class POSController {
             @RequestBody UpdatePOSRequest body) {
         logger.info("endpoint updatePos called with id: {} and new name: {}", id, body.name());
         try {
-            PointOfSale updated = posService.updateNamePointOfSale(String.valueOf(id), body.name());
+            PointOfSale updated = posService.updateNamePointOfSale(id, body.name());
             return ResponseEntity.ok(body);
         } catch (NoSuchElementException e) {
             return ResponseEntity.notFound().build();
@@ -70,7 +70,7 @@ public class POSController {
     public ResponseEntity<String> delete(
             @PathVariable Long id) {
         logger.info("endpoint deletePos called with id: {}", id);
-        posService.delete(String.valueOf(id));
+        posService.delete(id);
         return ResponseEntity.ok("POS Deleted");
     }
 

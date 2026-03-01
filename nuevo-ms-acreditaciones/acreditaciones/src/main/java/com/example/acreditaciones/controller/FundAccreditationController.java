@@ -3,8 +3,10 @@ package com.example.acreditaciones.controller;
 import com.example.acreditaciones.dto.FundAccreditationDTO;
 import com.example.acreditaciones.service.FundAccreditationService;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -14,9 +16,9 @@ import java.net.URI;
 public class FundAccreditationController {
 
     private final FundAccreditationService fundAccreditationService;
-    // Spring inyecta automáticamente el bean POSService
-    public FundAccreditationController(FundAccreditationService fundAccreditationService) { this.fundAccreditationService = fundAccreditationService;
 
+    public FundAccreditationController(@Qualifier("FundAccreditationServiceImpl") FundAccreditationService  fundAccreditationService) {
+        this.fundAccreditationService = fundAccreditationService;
     }
 
     @PostMapping("/add")

@@ -1,6 +1,8 @@
 package com.challenge_2026.punto_de_venta_acc.dto;
 
-public class GraphPOSDto {
+import java.io.Serializable;
+
+public class GraphPOSDto implements Serializable {
     private String originPOS;
     private String destinationPOS;
     private Integer cost;

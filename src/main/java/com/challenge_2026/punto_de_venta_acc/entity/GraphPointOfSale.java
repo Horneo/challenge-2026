@@ -1,18 +1,29 @@
-package com.challenge_2026.punto_de_venta_acc.model;
+package com.challenge_2026.punto_de_venta_acc.entity;
 
-import org.bson.types.ObjectId;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+
+import jakarta.persistence.*;
+import org.springframework.data.redis.core.RedisHash;
+
+import java.io.Serializable;
 import java.util.Objects;
 
-@Document(collection = "GraphPointOfSale")
-public class GraphPointOfSale {
+@Entity
+@Table(name = "graph_pos", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"origin_pos", "destination_pos"})
+})
+public class GraphPointOfSale implements Serializable {
 
     @Id
-    private ObjectId id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
+    @Column(name = "origin_pos")
     private String originPointOfSale;
+
+    @Column(name = "destination_pos")
     private String destinationPointOfSale;
+
+    @Column(name = "cost")
     private Integer cost;
 
     // Constructor sin argumentos (necesario para Spring Data / frameworks)
@@ -20,7 +31,7 @@ public class GraphPointOfSale {
     }
 
     // Constructor con todos los campos
-    public GraphPointOfSale(ObjectId id, String originPointOfSale, String destinationPointOfSale, Integer cost) {
+    public GraphPointOfSale(Long id, String originPointOfSale, String destinationPointOfSale, Integer cost) {
         this.id = id;
         this.originPointOfSale = originPointOfSale;
         this.destinationPointOfSale = destinationPointOfSale;
@@ -28,11 +39,11 @@ public class GraphPointOfSale {
     }
 
     // Getters y Setters
-    public ObjectId getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(ObjectId id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

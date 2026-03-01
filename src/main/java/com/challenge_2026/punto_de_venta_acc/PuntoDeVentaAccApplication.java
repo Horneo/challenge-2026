@@ -3,10 +3,10 @@ package com.challenge_2026.punto_de_venta_acc;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
-@EnableMongoRepositories(basePackages = "com.challenge_2026.punto_de_venta_acc.repository")
+@EnableJpaRepositories(basePackages = "com.challenge_2026.punto_de_venta_acc.repository")
 @EnableCaching
 public class PuntoDeVentaAccApplication {
 

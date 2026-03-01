@@ -5,7 +5,7 @@ import com.challenge_2026.punto_de_venta_acc.dto.CreatePOSRequest;
 import com.challenge_2026.punto_de_venta_acc.dto.POSDto;
 import com.challenge_2026.punto_de_venta_acc.dto.POSResponse;
 import com.challenge_2026.punto_de_venta_acc.dto.UpdatePOSRequest;
-import com.challenge_2026.punto_de_venta_acc.model.PointOfSale;
+import com.challenge_2026.punto_de_venta_acc.entity.PointOfSale;
 import com.challenge_2026.punto_de_venta_acc.service.impl.POSServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -50,7 +50,7 @@ class POSControllerTest {
         // Arrange
         CreatePOSRequest req = mock(CreatePOSRequest.class);
         PointOfSale created = mock(PointOfSale.class);
-        when(created.getId()).thenReturn(String.valueOf(123L));
+        when(created.getId()).thenReturn(123L);
         when(posService.create(any(PointOfSale.class))).thenReturn(created);
 
         // Act
@@ -73,7 +73,7 @@ class POSControllerTest {
         // Arrange
         UpdatePOSRequest body = mock(UpdatePOSRequest.class);
         when(body.name()).thenReturn("Nuevo Nombre");
-        when(posService.updateNamePointOfSale("5", "Nuevo Nombre")).thenReturn(mock(PointOfSale.class));
+        when(posService.updateNamePointOfSale(5L, "Nuevo Nombre")).thenReturn(mock(PointOfSale.class));
 
         // Act
         ResponseEntity<UpdatePOSRequest> response = controller.put(5L, body);
@@ -81,7 +81,7 @@ class POSControllerTest {
         // Assert
         assertEquals(OK, response.getStatusCode());
         assertSame(body, response.getBody(), "El body devuelto debe ser el mismo UpdatePOSRequest");
-        verify(posService).updateNamePointOfSale("5", "Nuevo Nombre");
+        verify(posService).updateNamePointOfSale(5L, "Nuevo Nombre");
         verifyNoMoreInteractions(posService);
     }
 
@@ -90,7 +90,7 @@ class POSControllerTest {
         // Arrange
         UpdatePOSRequest body = mock(UpdatePOSRequest.class);
         when(body.name()).thenReturn("Nombre");
-        when(posService.updateNamePointOfSale(eq("7"), any()))
+        when(posService.updateNamePointOfSale(eq(7L), any()))
                 .thenThrow(new NoSuchElementException("No existe"));
 
         // Act
@@ -99,7 +99,7 @@ class POSControllerTest {
         // Assert
         assertEquals(NOT_FOUND, response.getStatusCode());
         assertNull(response.getBody());
-        verify(posService).updateNamePointOfSale(eq("7"), any());
+        verify(posService).updateNamePointOfSale(eq(7L), any());
         verifyNoMoreInteractions(posService);
     }
 
@@ -111,7 +111,7 @@ class POSControllerTest {
         // Assert
         assertEquals(OK, response.getStatusCode());
         assertEquals("POS Deleted", response.getBody());
-        verify(posService).delete("9");
+        verify(posService).delete(9L);
         verifyNoMoreInteractions(posService);
     }
 }

@@ -5,10 +5,10 @@ package com.challenge_2026.punto_de_venta_acc.dto;
  * Incluye un mensaje y los datos del POS creado.
  */
 public record POSResponse(
-        String id,
+        Long id,
         String name
 ) {
-    public static POSResponse created(String id, String name, String location) {
+    public static POSResponse created(Long id, String name, String location) {
         return new POSResponse(id, name);
     }
 }

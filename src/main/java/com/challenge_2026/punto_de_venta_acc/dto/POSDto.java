@@ -1,21 +1,23 @@
 package com.challenge_2026.punto_de_venta_acc.dto;
 
-public class POSDto {
-    private String id;
+import java.io.Serializable;
+
+public class POSDto implements Serializable {
+    private Long id;
     private String name;
 
     public POSDto() {}
 
-    public POSDto(String id, String name) {
+    public POSDto(Long id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

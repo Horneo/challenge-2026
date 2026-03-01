@@ -5,13 +5,16 @@ import com.challenge_2026.punto_de_venta_acc.dto.MinimumGraphPOSDto;
 import com.challenge_2026.punto_de_venta_acc.dto.POSDto;
 import com.challenge_2026.punto_de_venta_acc.mapper.ResponseGraphPOSMapper;
 import com.challenge_2026.punto_de_venta_acc.mapper.ResponseMinimumGraphPOSMapper;
-import com.challenge_2026.punto_de_venta_acc.model.GraphPointOfSale;
+import com.challenge_2026.punto_de_venta_acc.entity.GraphPointOfSale;
 import com.challenge_2026.punto_de_venta_acc.repository.GraphPOSRepository;
-import com.challenge_2026.punto_de_venta_acc.repository.GraphPointOfSaleAggRepository;
+import com.challenge_2026.punto_de_venta_acc.repository.GraphPointOfSaleRouteRepository;
 import com.challenge_2026.punto_de_venta_acc.service.GraphPOSService;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,28 +25,32 @@ import java.util.stream.Collectors;
 public class GraphPOSServiceImpl implements GraphPOSService {
     private final GraphPOSRepository repo;
 
-    private final GraphPointOfSaleAggRepository minimumRoutesRepo;
+    private final GraphPointOfSaleRouteRepository minimumRoutesRepo;
 
     private final POSServiceImpl posService;
 
-    public GraphPOSServiceImpl(GraphPOSRepository repo, GraphPointOfSaleAggRepository minimumRoutesRepo, POSServiceImpl posService) {
+    public GraphPOSServiceImpl(GraphPOSRepository repo, GraphPointOfSaleRouteRepository minimumRoutesRepo, POSServiceImpl posService) {
         this.repo = repo;
         this.minimumRoutesRepo = minimumRoutesRepo;
         this.posService = posService;
     }
 
-    @Cacheable(value = "graphPointOfSale", key = "'all'")
+    @Cacheable( cacheNames = "graphPDVAll", key = "'all'")
+    @Transactional(readOnly = true)
     public List<GraphPOSDto> findAll() {
         return repo.findAll().stream().map(ResponseGraphPOSMapper::toDto).toList();
     }
 
-    @CacheEvict( value = "graphPointOfSale", key = "#result.id")
+    @Transactional
+    @CacheEvict( cacheNames = "graphPDVAll", key = "'all'")
+    @CachePut( cacheNames = "graphPDVById", key = "#result.id")
     public GraphPointOfSale create(GraphPointOfSale pos) {
         return repo.save(pos);
     }
 
 
-    @Cacheable(value = "graphPointOfSaleMinimumRoutes", key = "'allMinimumRoutes'")
+    @Cacheable( cacheNames = "minimumRoutesAll", key = "'all'")
+    @Transactional
     public List<MinimumGraphPOSDto> showMinimumRoutes() {
         // 1) Obtengo rutas mínimas (IDs)
         List<MinimumGraphPOSDto> routes = minimumRoutesRepo.findMinCostPerOriginAndDestination()
@@ -56,9 +63,9 @@ public class GraphPOSServiceImpl implements GraphPOSService {
         }
 
         // 2) Cargo POS una sola vez y armo mapa id -> nombre
-        List<POSDto> allPos = posService.findAll(); // cacheado por @Cacheable en POSService
-        Map<String, String> posNameById = allPos.stream()
-                .collect(Collectors.toMap(POSDto::getId, POSDto::getName, (a, b) -> a)); // merge function defensiva
+        //List<POSDto> allPos = posService.findAll(); // cacheado por @Cacheable en POSService
+        //Map<Long, String> posNameById = allPos.stream()
+          //      .collect(Collectors.toMap(POSDto::getId, POSDto::getName, (a, b) -> a)); // merge function defensiva
 
         // 3) Recorro todos los caminos mas cortos y le cargo el nombre del punto de venta
 
@@ -67,12 +74,9 @@ public class GraphPOSServiceImpl implements GraphPOSService {
             String originId = r.getOriginPOS();
             String destId   = r.getDestinationPOS(); // corregido
 
-            String originName = posNameById.getOrDefault(originId, originId);
-            String destName   = posNameById.getOrDefault(destId, destId);
-
             MinimumGraphPOSDto dto = new MinimumGraphPOSDto();
-            dto.setOriginPOS(originName);
-            dto.setDestinationPOS(destName);
+            dto.setOriginPOS(originId);
+            dto.setDestinationPOS(destId);
             dto.setMinimumCost(r.getMinimumCost());
             out.add(dto);
         }
@@ -80,7 +84,13 @@ public class GraphPOSServiceImpl implements GraphPOSService {
 
     }
 
-    @CacheEvict( value = "pointOfSale", key = "#pointA + '-' + #pointB")
+    @Transactional
+    @Caching(
+            evict = {
+                    @CacheEvict( cacheNames = "graphPDVAll", key = "'all'"),
+                    @CacheEvict( cacheNames = "minimumRoutesAll", key = "'all'")
+            }
+    )
     public void delete(String pointA, String pointB) { repo.deleteByOriginPointOfSaleAndDestinationPointOfSale(pointA, pointB);}
 
 }

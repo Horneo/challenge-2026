@@ -1,17 +1,21 @@
-package com.challenge_2026.punto_de_venta_acc.model;
+package com.challenge_2026.punto_de_venta_acc.entity;
 
 import com.challenge_2026.punto_de_venta_acc.dto.CreatePOSRequest;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import jakarta.persistence.*;
+import org.springframework.data.redis.core.RedisHash;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-@Document(collection = "pos")
-public class PointOfSale {
+@Entity
+@Table(name = "point_of_sale")
+public class PointOfSale implements Serializable {
 
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
+    @Column(name = "name")
     private String name;
 
     // Constructor sin argumentos (requerido por algunos frameworks)
@@ -19,7 +23,7 @@ public class PointOfSale {
     }
 
     // Constructor con todos los campos
-    public PointOfSale(String id, String name) {
+    public PointOfSale(Long id, String name) {
         this.id = id;
         this.name = name;
     }
@@ -38,11 +42,11 @@ public class PointOfSale {
     }
 
     // Getters y Setters
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {  // si preferís inmutabilidad, podés remover este setter
+    public void setId(Long id) {  // si preferís inmutabilidad, podés remover este setter
         this.id = id;
     }
 
