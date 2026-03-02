@@ -1,4 +1,4 @@
-package com.example.acreditaciones.service.Impl;
+package com.example.acreditaciones.service.impl;
 
 import com.example.acreditaciones.dto.FundAccreditationDTO;
 import com.example.acreditaciones.dto.PosDTO;
@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-@Service
+@Service("fundAccreditationServiceImpl")
 public class FundAccreditationServiceImpl implements FundAccreditationService {
 
     private final WebClient webClient;

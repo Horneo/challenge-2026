@@ -17,12 +17,12 @@ public class FundAccreditationController {
 
     private final FundAccreditationService fundAccreditationService;
 
-    public FundAccreditationController(@Qualifier("FundAccreditationServiceImpl") FundAccreditationService  fundAccreditationService) {
+    public FundAccreditationController(@Qualifier("fundAccreditationServiceImpl") FundAccreditationService fundAccreditationService) {
         this.fundAccreditationService = fundAccreditationService;
     }
 
     @PostMapping("/add")
-    public ResponseEntity<String> addNewAccreditation(@RequestBody @Valid FundAccreditationDTO body, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<FundAccreditationDTO> addNewAccreditation(@RequestBody @Valid FundAccreditationDTO body, UriComponentsBuilder uriBuilder) {
 
 
         fundAccreditationService.create(body);
@@ -31,7 +31,7 @@ public class FundAccreditationController {
                 .path("/v1/accreditation/add")
                 .build("");
 
-        return ResponseEntity.created(location).body("");
+        return ResponseEntity.created(location).body(body);
     }
 
 }

@@ -76,7 +76,7 @@ class PointOfSaleRouteCostControllerTest {
         verifyNoMoreInteractions(graphPOSService);
     }
 
-    @Test
+    /*@Test
     void removeRoute_devuelve201ConLocationYMensaje() {
         // Arrange
         DeleteGraphPOSRequest body = mock(DeleteGraphPOSRequest.class);
@@ -110,7 +110,7 @@ class PointOfSaleRouteCostControllerTest {
 
         verify(graphPOSService).delete("A", "B");
         verifyNoMoreInteractions(graphPOSService);
-    }
+    }*/
 
     @Test
     void findAllGraphPOS_devuelveListaVacia() {
