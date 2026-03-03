@@ -409,6 +409,9 @@ public record GraphPOSResponse(String message) {}
     - En Spring 6, `ResponseEntity#getStatusCode()` devuelve `HttpStatusCode`; comparar con `HttpStatus` o usar `getStatusCodeValue()` si se compara con `int`.
     - Verificar encabezados `Location` en respuestas `201`.
 
-  
+Mejoras:
+1)Al actualizar un punto de venta verificar que no sea el mismo que ya esta ingresado
+2)Usar el algoritmo de Dijkstra para calcular la ruta minima entre dos puntos.
+3)Agregar validacion en la acreditaciones para arrojar exception cuando el punto de venta no exista.
 
 © 2026 — Punto de Venta API

@@ -15,7 +15,7 @@ public class PointOfSale implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "name", unique = true, nullable = false)
     private String name;
 
     // Constructor sin argumentos (requerido por algunos frameworks)

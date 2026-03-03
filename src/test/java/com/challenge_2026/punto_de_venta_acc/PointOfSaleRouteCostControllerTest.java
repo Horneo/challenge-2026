@@ -126,13 +126,13 @@ class PointOfSaleRouteCostControllerTest {
 
     @Test
     void showMinimumRoutes_devuelveListaVacia() {
-        when(graphPOSService.showMinimumRoutes()).thenReturn(List.of());
+        when(graphPOSService.calculateMinimumRoutesWithDijstra("1","2")).thenReturn(List.of());
 
-        List<MinimumGraphPOSDto> result = controller.showMinimumRoutes();
+        List<String> result = controller.calculateMinimumRoutes("1", "2");
 
         assertNotNull(result);
         assertTrue(result.isEmpty());
-        verify(graphPOSService).showMinimumRoutes();
+        verify(graphPOSService).calculateMinimumRoutesWithDijstra("1", "2");
         verifyNoMoreInteractions(graphPOSService);
     }
 }

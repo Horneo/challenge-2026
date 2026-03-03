@@ -1,6 +1,8 @@
 package com.challenge_2026.punto_de_venta_acc.service.impl;
 
 import com.challenge_2026.punto_de_venta_acc.dto.POSDto;
+import com.challenge_2026.punto_de_venta_acc.exception.PuntoDeVentaNotFoundException;
+import com.challenge_2026.punto_de_venta_acc.exception.UpdateNameAlreadyExistException;
 import com.challenge_2026.punto_de_venta_acc.mapper.ResponsePOSMapper;
 import com.challenge_2026.punto_de_venta_acc.entity.PointOfSale;
 import com.challenge_2026.punto_de_venta_acc.repository.POSRepository;
@@ -41,7 +43,14 @@ public class POSServiceImpl implements PosService {
     public PointOfSale updateNamePointOfSale(Long id, String newName) {
 
         PointOfSale pos = repo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Punto de Venta No Encontrado"));
+                .orElseThrow(() -> new PuntoDeVentaNotFoundException("El punto de venta que se desea actualizar no existe"));
+
+        repo.findByName(newName).ifPresent( p-> {
+            if(!p.getId().equals(id)) {
+                throw new UpdateNameAlreadyExistException("Ya existe un punto de venta con el nombre: " + newName);
+            }
+        });
+
         PointOfSale updated = pos.withName(newName);
         repo.save(updated);
         return updated;

@@ -60,8 +60,8 @@ public class PointOfSaleRouteCostController {
         return graphPosService.findAll();
     }
 
-    @GetMapping("/showMinimumRoutes")
-    public List<MinimumGraphPOSDto> showMinimumRoutes() {
-        return graphPosService.showMinimumRoutes();
+    @GetMapping("/calculateMinimumRoutes")
+    public List<String> calculateMinimumRoutes(@RequestParam @Valid String pointA, @RequestParam @Valid String pointB) {
+        return graphPosService.calculateMinimumRoutesWithDijstra(pointA, pointB);
     }
 }

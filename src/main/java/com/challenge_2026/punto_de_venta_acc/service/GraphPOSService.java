@@ -12,7 +12,7 @@ public interface GraphPOSService {
 
     public GraphPointOfSale create(GraphPointOfSale pos);
 
-    public List<MinimumGraphPOSDto> showMinimumRoutes();
+    public List<String> calculateMinimumRoutesWithDijstra(String inicio, String fin);
 
     public void delete(String pointA, String pointB);
 }

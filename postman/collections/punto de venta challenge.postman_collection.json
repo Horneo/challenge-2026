@@ -247,7 +247,7 @@
           }
         ],
         "url": {
-          "raw": "http://localhost:8080/v1/point-of-sale-cost/showMinimumRoutes",
+          "raw": "http://localhost:8080/v1/point-of-sale-cost/calculateMinimumRoutes?pointA=1&pointB=10",
           "protocol": "http",
           "host": [
             "localhost"
@@ -256,7 +256,19 @@
           "path": [
             "v1",
             "point-of-sale-cost",
-            "showMinimumRoutes"
+            "calculateMinimumRoutes"
+          ],
+          "query": [
+            {
+              "key": "pointA",
+              "value": "1",
+              "uuid": "8c6d34c3-8eb7-48dc-a206-ceed48c9a1e3"
+            },
+            {
+              "key": "pointB",
+              "value": "10",
+              "uuid": "14b12195-4626-4b7e-ad35-b8dcb5577c79"
+            }
           ]
         }
       },

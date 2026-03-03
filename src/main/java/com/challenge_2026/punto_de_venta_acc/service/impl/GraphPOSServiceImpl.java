@@ -1,13 +1,9 @@
 package com.challenge_2026.punto_de_venta_acc.service.impl;
 
 import com.challenge_2026.punto_de_venta_acc.dto.GraphPOSDto;
-import com.challenge_2026.punto_de_venta_acc.dto.MinimumGraphPOSDto;
-import com.challenge_2026.punto_de_venta_acc.dto.POSDto;
 import com.challenge_2026.punto_de_venta_acc.mapper.ResponseGraphPOSMapper;
-import com.challenge_2026.punto_de_venta_acc.mapper.ResponseMinimumGraphPOSMapper;
 import com.challenge_2026.punto_de_venta_acc.entity.GraphPointOfSale;
 import com.challenge_2026.punto_de_venta_acc.repository.GraphPOSRepository;
-import com.challenge_2026.punto_de_venta_acc.repository.GraphPointOfSaleRouteRepository;
 import com.challenge_2026.punto_de_venta_acc.service.GraphPOSService;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -16,22 +12,18 @@ import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class GraphPOSServiceImpl implements GraphPOSService {
     private final GraphPOSRepository repo;
 
-    private final GraphPointOfSaleRouteRepository minimumRoutesRepo;
-
     private final POSServiceImpl posService;
 
-    public GraphPOSServiceImpl(GraphPOSRepository repo, GraphPointOfSaleRouteRepository minimumRoutesRepo, POSServiceImpl posService) {
+    public GraphPOSServiceImpl(GraphPOSRepository repo, POSServiceImpl posService) {
         this.repo = repo;
-        this.minimumRoutesRepo = minimumRoutesRepo;
         this.posService = posService;
     }
 
@@ -49,40 +41,43 @@ public class GraphPOSServiceImpl implements GraphPOSService {
     }
 
 
-    @Cacheable( cacheNames = "minimumRoutesAll", key = "'all'")
-    @Transactional
-    public List<MinimumGraphPOSDto> showMinimumRoutes() {
-        // 1) Obtengo rutas mínimas (IDs)
-        List<MinimumGraphPOSDto> routes = minimumRoutesRepo.findMinCostPerOriginAndDestination()
-                .stream()
-                .map(ResponseMinimumGraphPOSMapper::toDto)
-                .toList();
+    @Cacheable( value = "rutas", key = "{#inicio, #fin}")
+    public List<String> calculateMinimumRoutesWithDijstra(String inicio, String fin) {
 
-        if (routes.isEmpty()) {
-            return routes;
+        List<String> caminoMinimo = new LinkedList<>();
+
+        List<GraphPointOfSale> routes = repo.findAll();
+
+        Set<String> nodos = routes.stream().flatMap(c -> Stream.of(c.getOriginPointOfSale(), c.getDestinationPointOfSale()))
+                .collect(Collectors.toSet());
+
+        Map<String, Double> distancias = new HashMap<>();
+        Map<String, String> anteriores = new HashMap<>();
+        PriorityQueue<String> cola = new PriorityQueue<>(Comparator.comparing(distancias::get));
+
+        nodos.forEach(n -> distancias.put(n, Double.MAX_VALUE));
+        distancias.put(inicio, 0.0);
+        cola.add(inicio);
+
+        while (!cola.isEmpty()) {
+            String actual = cola.poll();
+            if (actual.equals(fin)) break;
+
+            for (GraphPointOfSale ruta : routes.stream().filter(con ->
+                    con.getOriginPointOfSale().equals(actual)).toList()) {
+                Double nuevaDistancia = distancias.get(actual) + ruta.getCost();
+                if (nuevaDistancia < distancias.get(ruta.getDestinationPointOfSale())) {
+                    distancias.put(ruta.getDestinationPointOfSale(), nuevaDistancia);
+                    anteriores.put(ruta.getDestinationPointOfSale(), actual);
+                    cola.add(ruta.getDestinationPointOfSale());
+                }
+            }
         }
 
-        // 2) Cargo POS una sola vez y armo mapa id -> nombre
-        //List<POSDto> allPos = posService.findAll(); // cacheado por @Cacheable en POSService
-        //Map<Long, String> posNameById = allPos.stream()
-          //      .collect(Collectors.toMap(POSDto::getId, POSDto::getName, (a, b) -> a)); // merge function defensiva
+            for (String at = fin; at != null; at = anteriores.get(at)) caminoMinimo.add(0, at);
 
-        // 3) Recorro todos los caminos mas cortos y le cargo el nombre del punto de venta
-
-        List<MinimumGraphPOSDto> out = new ArrayList<>(routes.size());
-        for (MinimumGraphPOSDto r : routes) {
-            String originId = r.getOriginPOS();
-            String destId   = r.getDestinationPOS(); // corregido
-
-            MinimumGraphPOSDto dto = new MinimumGraphPOSDto();
-            dto.setOriginPOS(originId);
-            dto.setDestinationPOS(destId);
-            dto.setMinimumCost(r.getMinimumCost());
-            out.add(dto);
+            return caminoMinimo;
         }
-        return out;
-
-    }
 
     @Transactional
     @Caching(
