@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -75,6 +76,23 @@ public class GraphPOSServiceImpl implements GraphPOSService {
         }
 
             for (String at = fin; at != null; at = anteriores.get(at)) caminoMinimo.add(0, at);
+
+        long totalReconstruido = 0L;
+
+        for (int i = 0; i < caminoMinimo.size() - 1; i++) {
+            String origen  = caminoMinimo.get(i);
+            String destino = caminoMinimo.get(i + 1);
+
+            long costo = routes.stream()
+                    .filter(r -> r.getOriginPointOfSale().equals(origen)
+                            && r.getDestinationPointOfSale().equals(destino))
+                    .mapToLong(GraphPointOfSale::getCost)
+                    .sum();
+
+            totalReconstruido += costo;
+        }
+
+        ((LinkedList<String>) caminoMinimo).addLast("Costo Total: " + totalReconstruido);
 
             return caminoMinimo;
         }
