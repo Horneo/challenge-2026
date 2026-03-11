@@ -61,7 +61,7 @@ public class PointOfSaleRouteCostController {
     }
 
     @GetMapping("/calculateMinimumRoutes")
-    public List<String> calculateMinimumRoutes(@RequestParam @Valid String pointA, @RequestParam @Valid String pointB) {
+    public RutaDetalladaResponse calculateMinimumRoutes(@RequestParam @Valid String pointA, @RequestParam @Valid String pointB) {
         return graphPosService.calculateMinimumRoutesWithDijstra(pointA, pointB);
     }
 }

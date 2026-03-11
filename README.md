@@ -1,3 +1,6 @@
+Correr con este comando en podman: podman-compose up -d --build --force-recreate
+Luego probarlo en el postman con los endpoint de punto de venta y acreditaciones.
+
 ---
 Pasos a ejecutar para correr el caso de uso de todos los enunciados de punto de venta(enunciado 1, 2 y 3)
 1) Levantar el docker composer con podman-compose - esto te crea un pod_punto-de-venta-acc

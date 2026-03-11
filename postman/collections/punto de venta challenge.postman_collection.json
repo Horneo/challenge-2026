@@ -205,35 +205,6 @@
       "response": []
     },
     {
-      "name": "enunciado 2 - endpoint muestra todos los caminos de los puntos de venta",
-      "id": "05ac5ada-b4c7-4f71-a70f-d45b86dfae0a",
-      "request": {
-        "method": "GET",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json",
-            "type": "text",
-            "uuid": "580bed9b-0591-4504-8f78-59afce5c2659"
-          }
-        ],
-        "url": {
-          "raw": "http://localhost:8080/v1/point-of-sale-cost/findAll",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8080",
-          "path": [
-            "v1",
-            "point-of-sale-cost",
-            "findAll"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
       "name": "enunciado 2 - mostrar el camino mas corto entre 2 puntos(por ahora entre todos los puntos)",
       "id": "60b2da97-71c5-4d88-b55e-338945a944aa",
       "request": {
@@ -269,6 +240,35 @@
               "value": "10",
               "uuid": "14b12195-4626-4b7e-ad35-b8dcb5577c79"
             }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "enunciado 2 - endpoint muestra todos los caminos de los puntos de venta",
+      "id": "05ac5ada-b4c7-4f71-a70f-d45b86dfae0a",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text",
+            "uuid": "580bed9b-0591-4504-8f78-59afce5c2659"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/v1/point-of-sale-cost/findAll",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "point-of-sale-cost",
+            "findAll"
           ]
         }
       },

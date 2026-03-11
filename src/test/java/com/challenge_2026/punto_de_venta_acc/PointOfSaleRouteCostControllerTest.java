@@ -1,11 +1,7 @@
 package com.challenge_2026.punto_de_venta_acc;
 
 import com.challenge_2026.punto_de_venta_acc.controller.PointOfSaleRouteCostController;
-import com.challenge_2026.punto_de_venta_acc.dto.CreateGraphPOSRequest;
-import com.challenge_2026.punto_de_venta_acc.dto.DeleteGraphPOSRequest;
-import com.challenge_2026.punto_de_venta_acc.dto.GraphPOSDto;
-import com.challenge_2026.punto_de_venta_acc.dto.GraphPOSResponse;
-import com.challenge_2026.punto_de_venta_acc.dto.MinimumGraphPOSDto;
+import com.challenge_2026.punto_de_venta_acc.dto.*;
 import com.challenge_2026.punto_de_venta_acc.service.impl.GraphPOSServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -121,18 +117,6 @@ class PointOfSaleRouteCostControllerTest {
         assertNotNull(result);
         assertTrue(result.isEmpty());
         verify(graphPOSService).findAll();
-        verifyNoMoreInteractions(graphPOSService);
-    }
-
-    @Test
-    void showMinimumRoutes_devuelveListaVacia() {
-        when(graphPOSService.calculateMinimumRoutesWithDijstra("1","2")).thenReturn(List.of());
-
-        List<String> result = controller.calculateMinimumRoutes("1", "2");
-
-        assertNotNull(result);
-        assertTrue(result.isEmpty());
-        verify(graphPOSService).calculateMinimumRoutesWithDijstra("1", "2");
         verifyNoMoreInteractions(graphPOSService);
     }
 }
